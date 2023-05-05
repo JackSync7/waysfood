@@ -17,7 +17,7 @@ function Navbar() {
       type: "LOGOUT",
     });
   }
-  console.log(state);
+
   return (
     <div>
       {/* =================Modal Login=================== */}
@@ -27,7 +27,9 @@ function Navbar() {
       <Register />
       {/* ================End modal====================*/}
       <div className="w-full m-0  h-14  flex items-center fixed px-14 justify-between  bg-yellowMain">
-        <img className="h-10 my-0" src={Logo} />
+        <Link to={"/"}>
+          <img className="h-10 my-0" src={Logo} />
+        </Link>
         <div>
           {/* =================MultiLogin============== */}
           {state?.isLogin && state?.user.role === "partner" && (

@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     colors: {
+      'redOld': '#D61C4E',
+      'greenLow': '#B3FFAE',
+      'greenHigh': '#379237',
       'yellowMain': '#FFC700',
       'brownMain': '#433434'
     },

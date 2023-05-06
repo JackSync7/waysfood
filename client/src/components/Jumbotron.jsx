@@ -8,7 +8,7 @@ function Jumbotron() {
       <div>
         <div className="w-full h-1/3 bg-yellowMain">
           <img
-            className="mx-auto w-4/6 p-14 "
+            className="mx-auto w-4/6 p-6 "
             src={JumbotronImg}
             alt="Loading"
           />

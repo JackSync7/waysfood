@@ -11,7 +11,9 @@ import (
 
 func TransactionRoutes(e *echo.Group) {
 	transactionRepository := repositories.RepositoryTransaction(mysql.DB)
-	h := handlers.HandlerTransaction(transactionRepository)
+	orderRepository := repositories.RepositoryOrder(mysql.DB)
+	cartRepository := repositories.RepositoryCarts(mysql.DB)
+	h := handlers.HandlerTransaction(transactionRepository, orderRepository, cartRepository)
 
 	e.GET("/transactions", h.FindTransaction)
 	e.GET("/transaction/:id", h.GetTransaction)

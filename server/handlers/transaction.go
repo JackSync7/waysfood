@@ -17,17 +17,21 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
-	"github.com/midtrans/midtrans-go"
-	"github.com/midtrans/midtrans-go/snap"
+
+	// "github.com/midtrans/midtrans-go"
+	// "github.com/midtrans/midtrans-go/snap"
 	"gopkg.in/gomail.v2"
 )
 
 type handlerTransaction struct {
 	TransactionRepository repositories.TransactionRepository
+	OrderRepository       repositories.OrderRepository
+	ChartRepository       repositories.CartsRepository
 }
 
-func HandlerTransaction(TransactionRepository repositories.TransactionRepository) *handlerTransaction {
-	return &handlerTransaction{TransactionRepository}
+func HandlerTransaction(TransactionRepository repositories.TransactionRepository,
+	OrderRepository repositories.OrderRepository, ChartRepository repositories.CartsRepository) *handlerTransaction {
+	return &handlerTransaction{TransactionRepository, OrderRepository, ChartRepository}
 }
 
 func (h *handlerTransaction) FindTransaction(c echo.Context) error {
@@ -76,9 +80,8 @@ func (h *handlerTransaction) CreateTransaction(c echo.Context) error {
 	Transactions := models.Transaction{
 		ID:         transactionId,
 		BuyerID:    int(buyerId),
-		ProductID:  request.ProductID,
-		SellerID:   request.SellerID,
-		TotalPrice: request.TotalPrice,
+		SellerID:   1,
+		TotalPrice: 2000000,
 		Status:     "pending",
 	}
 
@@ -86,30 +89,46 @@ func (h *handlerTransaction) CreateTransaction(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()})
 	}
+
+	orders, err := h.OrderRepository.GetOrderbyUser(int(buyerId))
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()})
+	}
+
+	for _, order := range orders {
+		cart := models.Carts{
+			Qty:           order.Qty,
+			ProductID:     order.ProductID,
+			TransactionID: dataTransactions.ID,
+		}
+		h.ChartRepository.CreateCarts(cart)
+
+	}
 	// 1. Initiate Snap client
-	var s = snap.Client{}
-	s.New(os.Getenv("SERVER_KEY"), midtrans.Sandbox)
+	// var s = snap.Client{}
+	// s.New(os.Getenv("SERVER_KEY"), midtrans.Sandbox)
 	// Use to midtrans.Production if you want Production Environment (accept real transaction).
 
 	// 2. Initiate Snap request param
-	req := &snap.Request{
-		TransactionDetails: midtrans.TransactionDetails{
-			OrderID:  strconv.Itoa(dataTransactions.ID),
-			GrossAmt: int64(dataTransactions.TotalPrice),
-		},
-		CreditCard: &snap.CreditCardDetails{
-			Secure: true,
-		},
-		CustomerDetail: &midtrans.CustomerDetails{
-			FName: dataTransactions.Buyer.FullName,
-			Email: dataTransactions.Buyer.Email,
-		},
-	}
+	// req := &snap.Request{
+	// 	TransactionDetails: midtrans.TransactionDetails{
+	// 		OrderID:  strconv.Itoa(dataTransactions.ID),
+	// 		GrossAmt: int64(dataTransactions.TotalPrice),
+	// 	},
+	// 	CreditCard: &snap.CreditCardDetails{
+	// 		Secure: true,
+	// 	},
+	// 	CustomerDetail: &midtrans.CustomerDetails{
+	// 		FName: dataTransactions.Buyer.Fullname,
+	// 		Email: dataTransactions.Buyer.Email,
+	// 	},
+	// }
 
-	// 3. Execute request create Snap transaction to Midtrans Snap API
-	snapResp, _ := s.CreateTransaction(req)
+	// // 3. Execute request create Snap transaction to Midtrans Snap API
+	// snapResp, _ := s.CreateTransaction(req)
 
-	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: snapResp})
+	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: dataTransactions})
 
 }
 
@@ -227,7 +246,7 @@ func SendMail(status string, transaction models.Transaction) {
 		var CONFIG_AUTH_PASSWORD = os.Getenv("PASSWORD_SYSTEM")
 
 		var productName = "Subscription Dumbflix"
-		var price = strconv.Itoa(transaction.TotalPrice)
+		var price = strconv.FormatInt(transaction.TotalPrice, 10)
 
 		mailer := gomail.NewMessage()
 		mailer.SetHeader("From", CONFIG_SENDER_NAME)

@@ -41,12 +41,12 @@ func (h *handler) FindPartner(c echo.Context) error {
 func (h *handler) GetUser(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	user, err := h.UserRepository.GetUser(id)
+	carts, err := h.UserRepository.GetUser(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: user})
+	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: carts})
 }
 
 func (h *handler) CreateUser(c echo.Context) error {
@@ -110,16 +110,16 @@ func (h *handler) UpdateUser(c echo.Context) error {
 		user.Password = password
 	}
 
-	if request.Gender != "" {
-		user.Gender = request.Gender
-	}
-
 	if request.Phone != "" {
 		user.Phone = request.Phone
 	}
 
 	if request.Location != "" {
 		user.Location = request.Location
+	}
+
+	if request.Image != "" {
+		user.Image = request.Image
 	}
 
 	data, err := h.UserRepository.UpdateUser(user)

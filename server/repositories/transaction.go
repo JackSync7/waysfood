@@ -20,7 +20,7 @@ func RepositoryTransaction(db *gorm.DB) *repository {
 
 func (r *repository) FindTransaction() ([]models.Transaction, error) {
 	var Transaction []models.Transaction
-	err := r.db.Find(&Transaction).Error
+	err := r.db.Preload("Cart.Product").Preload("Buyer").Preload("Seller").Find(&Transaction).Error
 
 	return Transaction, err
 }

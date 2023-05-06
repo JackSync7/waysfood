@@ -11,7 +11,7 @@ function Home() {
 
   return (
     <div>
-      <div className=" w-3/4 p-5 mx-auto mt-10 flex gap-8 justify-center overflow-auto">
+      <div className=" w-5/6 p-5 mx-auto mt-10 flex gap-8 justify-center overflow-auto">
         {!isLoading &&
           getPartner?.map((data, i) => (
             <CardProduct key={i} name={data.fullname} img={data.image} />

@@ -71,7 +71,7 @@ func (h *handlerProduct) CreateProduct(c echo.Context) error {
 	dataFile := c.Get("dataFile").(string)
 	fmt.Println("this is data file", dataFile)
 
-	Price, _ := strconv.Atoi(c.FormValue("price"))
+	Price, _ := strconv.ParseInt(c.FormValue("price"), 10, 64)
 	Qty, _ := strconv.Atoi(c.FormValue("qty"))
 	UserId, _ := strconv.Atoi(c.FormValue("user_id"))
 	request := productdto.CreateProductRequest{
@@ -111,7 +111,7 @@ func (h *handlerProduct) UpdateProduct(c echo.Context) error {
 	dataFile := c.Get("dataFile").(string)
 	fmt.Println("this is data file", dataFile)
 
-	Price, _ := strconv.Atoi(c.FormValue("price"))
+	Price, _ := strconv.ParseInt(c.FormValue("price"), 10, 64)
 	Qty, _ := strconv.Atoi(c.FormValue("qty"))
 
 	request := productdto.UpdateProductRequest{

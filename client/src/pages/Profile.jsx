@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Foto from "../assets/foto.png";
 import { UserContext } from "../context/userContext";
 import CardTransaction from "../components/reusable/CardTransaction";
+import { Link } from "react-router-dom";
 
 function Profile() {
   const [state, dispatch] = useContext(UserContext);
@@ -15,9 +16,11 @@ function Profile() {
             <div className="mt-4 flex">
               <div>
                 <img className="w-52" src={Foto} />
-                <button className="w-52 text-lg bg-brownMain text-neutral-50 py-1 mt-2 rounded-md">
-                  Edit Profile
-                </button>
+                <Link to="/edit-profile">
+                  <button className="w-52 text-lg bg-brownMain text-neutral-50 py-1 mt-2 rounded-md">
+                    Edit Profile
+                  </button>
+                </Link>
               </div>
               <div className="flex flex-col gap-3 ml-6">
                 <div>

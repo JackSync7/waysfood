@@ -24,13 +24,15 @@ function Login() {
       e.preventDefault();
       const response = await API.post("/login", getData);
       if (response) {
-        if (response.data.data.role === "partner") {
-          setLoginRole("partner");
-        }
         dispatch({
           type: "LOGIN_SUCCESS",
           payload: response.data.data,
         });
+        if (response.data.data.role === "partner") {
+          setLoginRole("partner");
+          // navigate("/partner-dashboard");
+          location.reload();
+        }
       } else {
         navigate("/");
       }

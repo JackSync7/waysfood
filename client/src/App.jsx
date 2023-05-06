@@ -1,8 +1,15 @@
 import "./App.css";
 import Navbar from "./components/Navbar";
-import Jumbotron from "./components/Jumbotron";
 import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 import Home from "./pages/Home";
+import PartnerDashboard from "./pages/partner/PartnerDashboard";
+import AddProduct from "./pages/partner/AddProduct";
+import {
+  PrivateRouteLogin,
+  PrivateRouteCustomer,
+  PrivateRoutePartner,
+} from "./PrivateRoute";
 import { UserContext } from "./context/userContext";
 import { API, setAuthToken } from "./config/api";
 import { Routes, Route, useNavigate } from "react-router-dom";
@@ -29,7 +36,6 @@ function App() {
       setIsLoading(false);
     }
   }, []);
-
   const checkUser = async () => {
     try {
       const response = await API.get("/check-auth");
@@ -60,6 +66,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/edit-profile" element={<EditProfile />} />
+            <Route path="/partner-dashboard" element={<PartnerDashboard />} />
+            <Route path="/add-product" element={<AddProduct />} />
           </Routes>
         </div>
       )}

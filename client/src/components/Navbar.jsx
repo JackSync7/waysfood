@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Logo from "../assets/Logo.png";
 import Profile from "../assets/profile.png";
 import Login from "../components/Login";
@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 
 function Navbar() {
+  const [url, seturl] = useState("/");
   const [state, Dispatch] = useContext(UserContext);
 
   function logout() {
@@ -17,17 +18,22 @@ function Navbar() {
       type: "LOGOUT",
     });
   }
+  useEffect(() => {
+    if (state.isLogin && state.user.role == "partner") {
+      seturl("/partner-dashboard");
+    }
+  }, [state]);
 
   return (
     <div>
-      {/* =================Modal Login=================== */}
+      {/* =================Modal Login======================*/}
       <Login />
-      {/* ================End modal====================*/}
+      {/* ================End modal=========================*/}
       {/* ================Modal Register====================*/}
       <Register />
-      {/* ================End modal====================*/}
+      {/* ================End modal=========================*/}
       <div className="w-full m-0  h-14  flex items-center fixed px-14 justify-between  bg-yellowMain">
-        <Link to={"/"}>
+        <Link to={url}>
           <img className="h-10 my-0" src={Logo} />
         </Link>
         <div>
@@ -46,10 +52,12 @@ function Navbar() {
                       <div>profile Partner</div>
                     </div>
                   </Link>
-                  <div className="flex items-center gap-2 px-5">
-                    <MdOutlineFastfood color="black" size={20} />
-                    <div>Add Product</div>
-                  </div>
+                  <Link to={"add-product"}>
+                    <div className="flex items-center gap-2 px-5">
+                      <MdOutlineFastfood color="black" size={20} />
+                      <div>Add Product</div>
+                    </div>
+                  </Link>
                   <div
                     onClick={() => logout()}
                     className="cursor-pointer flex items-center gap-2 px-5 pt-2 border-t-2 border-neutral-300"

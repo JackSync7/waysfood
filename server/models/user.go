@@ -14,7 +14,7 @@ type User struct {
 
 type UsersProfileResponse struct {
 	ID       int    `json:"id"`
-	FullName string `json:"fullName"`
+	Fullname string `json:"fullname"`
 	Image    string `json:"image"`
 	Email    string `json:"email"`
 	Phone    string `json:"phone"`

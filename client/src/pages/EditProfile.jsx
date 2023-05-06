@@ -4,8 +4,14 @@ import { API } from "../config/api";
 import { UserContext } from "../context/userContext";
 import Swal from "sweetalert2";
 import { BiLocationPlus } from "react-icons/bi";
+import Map, { GeolocateControl } from "react-map-gl";
 
 function EditProfile() {
+  const [openMap, setOpenMap] = useState(false);
+  const [getCoord, setCoord] = useState({
+    long: "",
+    lat: "",
+  });
   const [state] = useContext(UserContext);
   const [form, setForm] = useState({
     fullname: "",
@@ -14,7 +20,15 @@ function EditProfile() {
     phone: "",
     location: "",
   });
-
+  function getCoordinates() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setCoord({
+        long: position.coords.latitude,
+        lat: position.coords.latitude,
+      });
+    });
+  }
+  console.log("ini coordinat : ", getCoord);
   let {
     data: getMenu,
     isLoading,
@@ -70,7 +84,21 @@ function EditProfile() {
   });
 
   return (
-    <div className="py-20 h-[100vh]">
+    <div className="py-20 h-[200vh]">
+      {openMap && (
+        <Map
+          initialViewState={{
+            longitude: getCoord.long,
+            latitude: getCoord.lat,
+            zoom: 3.5,
+          }}
+          style={{ width: "60vw", height: "60vh", margin: "auto" }}
+          mapStyle="mapbox://styles/mapbox/streets-v9"
+          mapboxAccessToken="pk.eyJ1IjoiamFja3M3NyIsImEiOiJja21xOHprcGcybW11MnVzN2M4d3g3MHF1In0.P6kIyvROxfxKvmip0iH27Q"
+        >
+          <GeolocateControl />
+        </Map>
+      )}
       <div className="mx-auto mt-10 h-[60vh] w-2/3 shadow-lg">
         <p className="mb-10 text-left ml-32 text-2xl font-semibold text-brownMain">
           Edit Profile
@@ -112,24 +140,30 @@ function EditProfile() {
               required
             />
             <div className="flex">
-              <label className="w-full p-2 px-2 text-neutral-50 text-lg bg-brownMain border-2 rounded-md border-neutral-300">
+              <label
+                onClick={() => {
+                  getCoordinates();
+                  setOpenMap(!openMap);
+                }}
+                className="w-full p-2 px-2 text-neutral-50 text-lg bg-brownMain border-2 rounded-md border-neutral-300"
+              >
                 <BiLocationPlus
                   size={25}
                   color="white"
                   className="absolute ml-80     "
                 />{" "}
-                Select On Map
+                {openMap ? "Close Map" : "Select On Map"}
               </label>
             </div>
             <div className="flex justify-end">
-              <button
-                type="submit"
-                className="bg-brownMain w-44 py-2 rounded-md text-neutral-50 mr-1"
-              >
+              <button className="bg-brownMain w-44 py-2 rounded-md text-neutral-50 mr-1">
                 Save
               </button>
             </div>
           </form>
+          <button onClick={() => getCoordinates()} className=" bg-redOld p-4">
+            get coord
+          </button>
         </div>
       </div>
     </div>

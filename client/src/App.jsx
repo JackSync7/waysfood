@@ -5,6 +5,7 @@ import EditProfile from "./pages/EditProfile";
 import Home from "./pages/Home";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import AddProduct from "./pages/partner/AddProduct";
+import Maps from "./pages/showMap";
 import {
   PrivateRouteLogin,
   PrivateRouteCustomer,
@@ -69,6 +70,7 @@ function App() {
             <Route path="/edit-profile" element={<EditProfile />} />
             <Route path="/partner-dashboard" element={<PartnerDashboard />} />
             <Route path="/add-product" element={<AddProduct />} />
+            <Route path="/map" element={<Maps />} />
           </Routes>
         </div>
       )}

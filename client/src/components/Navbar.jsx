@@ -6,10 +6,11 @@ import Register from "../components/Register";
 import { FiShoppingCart, FiLogOut } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineFastfood } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 
 function Navbar() {
+  let navigate = useNavigate();
   const [url, seturl] = useState("/");
   const [state, Dispatch] = useContext(UserContext);
 
@@ -17,6 +18,7 @@ function Navbar() {
     Dispatch({
       type: "LOGOUT",
     });
+    navigate("/");
   }
   useEffect(() => {
     if (state.isLogin && state.user.role == "partner") {

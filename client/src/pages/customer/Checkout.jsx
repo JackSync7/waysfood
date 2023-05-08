@@ -57,14 +57,67 @@ function Checkout() {
 
   const distanceInMiles = distance(source, destination, { units: "miles" });
 
-  //   console.log(
-  //     "seller : ",
-  //     source,
-  //     "dest : ",
-  //     destination,
-  //     "||",
-  //     distanceInMiles
-  //   );
+  useEffect(() => {
+    //change this to the script source you want to load, for example this is snap.js sandbox env
+    const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
+    //change this according to your client-key
+    const myMidtransClientKey = import.meta.env.REACT_APP_MIDTRANS_CLIENT_KEY;
+
+    let scriptTag = document.createElement("script");
+    scriptTag.src = midtransScriptUrl;
+    // optional if you want to set script attribute
+    // for example snap.js have data-client-key attribute
+    scriptTag.setAttribute("data-client-key", myMidtransClientKey);
+
+    document.body.appendChild(scriptTag);
+    return () => {
+      document.body.removeChild(scriptTag);
+    };
+  }, []);
+
+  const handleBuy = useMutation(async (e) => {
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const data = {
+        seller_id: state.user.id,
+        price: total,
+      };
+
+      const body = JSON.stringify(data);
+
+      const response = await API.post("/transaction", body, config);
+      console.log("transaction success :", response);
+
+      const token = response.data.data.token;
+      window.snap.pay(token, {
+        onSuccess: function (result) {
+          /* You may add your own implementation here */
+          console.log(result);
+          navigate("/profile");
+        },
+        onPending: function (result) {
+          /* You may add your own implementation here */
+          console.log(result);
+          navigate("/profile");
+        },
+        onError: function (result) {
+          /* You may add your own implementation here */
+          console.log(result);
+          navigate("/profile");
+        },
+        onClose: function () {
+          /* You may add your own implementation here */
+          alert("you closed the popup without finishing the payment");
+        },
+      });
+    } catch (error) {
+      console.log("transaction failed : ", error);
+    }
+  });
 
   useEffect(() => {
     setSource([
@@ -73,6 +126,7 @@ function Checkout() {
     ]);
     setDestination([JSON.stringify(longlat.lat), JSON.stringify(longlat.lng)]);
     setDistanceResult(distance(source, destination, { units: "miles" }));
+    refetch();
     if (distanceInMiles <= 10) {
       setOngkir(12000);
     } else if (distanceInMiles <= 30) {

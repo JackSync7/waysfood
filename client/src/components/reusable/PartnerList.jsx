@@ -40,7 +40,7 @@ function CardMenu(props) {
         <figure>
           <img
             className="w-full object-cover h-48"
-            src={`http://localhost:5000/uploads/${props.image}`}
+            src={props.image}
             alt="Shoes"
           />
         </figure>

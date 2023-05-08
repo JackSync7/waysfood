@@ -68,10 +68,10 @@ function Checkout() {
 
   useEffect(() => {
     setSource([
-      dataOrder[0]?.seller.location.split(" ")[1],
-      dataOrder[0]?.seller.location.split(" ")[0].slice(0, -1),
+      dataOrder[0]?.seller.location.split(",")[1].slice(0, -1),
+      dataOrder[0]?.seller.location.split(",")[0].slice(1),
     ]);
-    setDestination([JSON.stringify(longlat.lng), JSON.stringify(longlat.lat)]);
+    setDestination([JSON.stringify(longlat.lat), JSON.stringify(longlat.lng)]);
     setDistanceResult(distance(source, destination, { units: "miles" }));
     if (distanceInMiles <= 10) {
       setOngkir(12000);
@@ -181,11 +181,7 @@ function Checkout() {
             dataOrder.map((data, index) => (
               <div className="mt-4 border-t-2 border-brownMain py-4">
                 <div className="flex">
-                  <img
-                    className="w-36"
-                    src={`http://localhost:5000/uploads/${data.product.image}`}
-                    alt=""
-                  />
+                  <img className="w-36" src={data.product.image} alt="" />
                   <div className="p-5 ">
                     <p className="text-neutral-900 text-left">
                       {data?.product.title}

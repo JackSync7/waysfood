@@ -61,7 +61,7 @@ function Checkout() {
     //change this to the script source you want to load, for example this is snap.js sandbox env
     const midtransScriptUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
     //change this according to your client-key
-    const myMidtransClientKey = import.meta.env.REACT_APP_MIDTRANS_CLIENT_KEY;
+    const myMidtransClientKey = "SB-Mid-client-LPTreVdm9vOz2w2g";
 
     let scriptTag = document.createElement("script");
     scriptTag.src = midtransScriptUrl;
@@ -83,7 +83,7 @@ function Checkout() {
         },
       };
       const data = {
-        seller_id: state.user.id,
+        seller_id: dataOrder[0]?.seller.id,
         price: total,
       };
 
@@ -298,7 +298,7 @@ function Checkout() {
               Rp.{total}
             </p>
             <button
-              onClick={() => getTransaction.mutate()}
+              onClick={() => handleBuy.mutate()}
               className="mt-10 text-neutral-50 rounded-md bg-brownMain py-2 px-8"
             >
               Order

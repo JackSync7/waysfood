@@ -1,14 +1,19 @@
 package handlers
 
 import (
+	"context"
 	dto "dumbmerch/dto/result"
 	usersdto "dumbmerch/dto/users"
 	"dumbmerch/models"
 	"dumbmerch/pkg/bcrypt"
 	"dumbmerch/repositories"
+	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -51,6 +56,7 @@ func (h *handler) GetUser(c echo.Context) error {
 }
 
 func (h *handler) CreateUser(c echo.Context) error {
+	dataFile := c.Get("dataFile").(string)
 	request := new(usersdto.CreateUserRequest)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
@@ -60,6 +66,20 @@ func (h *handler) CreateUser(c echo.Context) error {
 	err := validation.Struct(request)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
+	}
+	var ctx = context.Background()
+	var CLOUD_NAME = os.Getenv("CLOUD_NAME")
+	var API_KEY = os.Getenv("API_KEY")
+	var API_SECRET = os.Getenv("API_SECRET")
+
+	// Add your Cloudinary credentials ...
+	cld, _ := cloudinary.NewFromParams(CLOUD_NAME, API_KEY, API_SECRET)
+
+	// Upload file to Cloudinary ...
+	resp, err := cld.Upload.Upload(ctx, dataFile, uploader.UploadParams{Folder: "waysfood"})
+
+	if err != nil {
+		fmt.Println(err.Error())
 	}
 
 	// data form pattern submit to pattern entity db user
@@ -71,7 +91,7 @@ func (h *handler) CreateUser(c echo.Context) error {
 		Phone:    request.Phone,
 		Location: request.Location,
 		Role:     request.Role,
-		Image:    request.Image,
+		Image:    resp.SecureURL,
 	}
 
 	data, err := h.UserRepository.CreateUser(user)

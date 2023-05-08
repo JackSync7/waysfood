@@ -1,12 +1,14 @@
 package handlers
 
 import (
+	"context"
 	authdto "dumbmerch/dto/auth"
 	dto "dumbmerch/dto/result"
 	usersdto "dumbmerch/dto/users"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"dumbmerch/models"
@@ -14,6 +16,8 @@ import (
 	jwtToken "dumbmerch/pkg/jwt"
 	"dumbmerch/repositories"
 
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -51,6 +55,21 @@ func (h *handlerAuth) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
 	}
 
+	var ctx = context.Background()
+	var CLOUD_NAME = os.Getenv("CLOUD_NAME")
+	var API_KEY = os.Getenv("API_KEY")
+	var API_SECRET = os.Getenv("API_SECRET")
+
+	// Add your Cloudinary credentials ...
+	cld, _ := cloudinary.NewFromParams(CLOUD_NAME, API_KEY, API_SECRET)
+
+	// Upload file to Cloudinary ...
+	resp, err := cld.Upload.Upload(ctx, dataFile, uploader.UploadParams{Folder: "waysfood"})
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
 	password, err := bcrypt.HashingPassword(request.Password)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
@@ -64,7 +83,7 @@ func (h *handlerAuth) Register(c echo.Context) error {
 		Phone:    request.Phone,
 		Location: request.Location,
 		Role:     request.Role,
-		Image:    request.Image,
+		Image:    resp.SecureURL,
 	}
 
 	data, err := h.AuthRepository.Register(user)

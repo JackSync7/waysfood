@@ -97,18 +97,14 @@ func (h *handlerTransaction) CreateTransaction(c echo.Context) error {
 		TotalPrice: request.TotalPrice,
 		Status:     "pending",
 	}
-
 	dataTransactions, err := h.TransactionRepository.CreateTransaction(Transactions)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()})
 	}
-
 	orders, err := h.OrderRepository.GetOrderbyUser(int(buyerId))
-
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()})
 	}
-
 	for _, order := range orders {
 		cart := models.Carts{
 			Qty:           order.Qty,
@@ -116,9 +112,7 @@ func (h *handlerTransaction) CreateTransaction(c echo.Context) error {
 			TransactionID: dataTransactions.ID,
 		}
 		h.ChartRepository.CreateCarts(cart)
-
 	}
-
 	var s = snap.Client{}
 	s.New(os.Getenv("SERVER_KEY"), midtrans.Sandbox)
 

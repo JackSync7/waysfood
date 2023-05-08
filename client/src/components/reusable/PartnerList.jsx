@@ -39,8 +39,8 @@ function CardMenu(props) {
       <div className="p-0 card card-compact w-72 mt-5 bg-neutral-50 text-neutral-900 shadow-xl">
         <figure>
           <img
-            className="w-full object-cover max-h-48"
-            src={props.image}
+            className="w-full object-cover h-48"
+            src={`http://localhost:5000/uploads/${props.image}`}
             alt="Shoes"
           />
         </figure>

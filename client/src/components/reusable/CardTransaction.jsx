@@ -6,18 +6,18 @@ function CardTransaction(props) {
     <div className="">
       <div className="w-fit p-6 text-lg h-28 gap-2 bg-white shadow-lg font-serif font-semibold flex justify-center items-center">
         <div className="mr-32 mx-auto">
-          <p className="text-neutral-800 text-sm text-left">Geprek Bensu</p>
+          <p className="text-neutral-800 text-sm text-left">{props.name}</p>
           <p className="text-neutral-700 font-sans text-xs text-left">
             12 March 2022
           </p>
           <p className="text-redOld font-sans text-sm font-medium mt-2 text-left">
-            Total : Rp.62.0000
+            Total : Rp.{props.total}
           </p>
         </div>
         <div>
           <img className="w-20" src={foto} alt="loading image" />
           <p className="bg-greenLow px-4 font-sans text-greenHigh text-sm">
-            SUCCESS
+            {props.status}
           </p>
         </div>
       </div>

@@ -3,9 +3,22 @@ import Foto from "../assets/foto.png";
 import { UserContext } from "../context/userContext";
 import CardTransaction from "../components/reusable/CardTransaction";
 import { Link } from "react-router-dom";
+import { API } from "../config/api";
+import { useQuery } from "react-query";
 
 function Profile() {
   const [state, dispatch] = useContext(UserContext);
+
+  let {
+    data: getTransaction,
+    isLoading,
+    refetch,
+  } = useQuery("getTransactionUser", async () => {
+    const response = await API.get(`/transaction-user`);
+
+    return response.data.data;
+  });
+  console.log(getTransaction);
 
   return (
     <div className="mx-auto h-[100vh] bg-neutral-50 p-20">
@@ -50,8 +63,14 @@ function Profile() {
             History Transaction
           </p>
           <div className="overflow-auto h-full">
-            <CardTransaction />
-            <CardTransaction />
+            {!isLoading &&
+              getTransaction?.map((data, i) => (
+                <CardTransaction
+                  name={data.seller.fullname}
+                  status={data.status}
+                  total={data.totalPrice}
+                />
+              ))}
           </div>
         </div>
       </div>

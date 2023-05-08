@@ -17,7 +17,7 @@ function CardMenu(props) {
         seller_id: Number(id),
         product_id: data.idProd,
       };
-      console.log("ini order", order);
+      //   console.log("ini order", order);
       const response = await API.post("/order", order);
       if (response) {
         console.log(response);
@@ -30,7 +30,7 @@ function CardMenu(props) {
 
   return (
     <div className="">
-      <div className="p-0 card card-compact w-72 mt-5 bg-neutral-50 text-neutral-900 shadow-xl">
+      <div className="p-0 card card-compact w-72 mt-10 bg-neutral-50 text-neutral-900 shadow-xl">
         <figure>
           <img
             className="w-full object-cover h-48 min"

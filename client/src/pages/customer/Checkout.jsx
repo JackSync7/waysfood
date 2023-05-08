@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "react-query";
 import { API } from "../../config/api";
 import { distance } from "@turf/turf";
 import { UserContext } from "../../context/userContext";
+import Swal from "sweetalert2";
 
 function Checkout() {
   const [state] = useContext(UserContext);
@@ -74,32 +75,30 @@ function Checkout() {
     setDistanceResult(distance(source, destination, { units: "miles" }));
     if (distanceInMiles <= 10) {
       setOngkir(12000);
-    } else if (distanceInMiles <= 20) {
+    } else if (distanceInMiles <= 30) {
       setOngkir(30000);
-    } else if (distanceInMiles > 20) {
+    } else if (distanceInMiles > 30) {
       setOngkir(2000000);
     }
     refetch();
   }, [longlat]);
 
-  // const order = {
-  //   qty: dataOrder.length,
-  //   buyer_id: state.user.id,
-  //   seller_id: dataOrder[0]?.seller.id,
-  //   product_id: data.idProd,
-  // };
-  console.log("woy stat", state);
-
-  const getTransaction = useMutation(async (data) => {
+  const getTransaction = useMutation(async () => {
     try {
-      //   const order = {
-      //     qty: data.qtyProd,
-      //     buyer_id: state.user.id,
-      //     seller_id: Number(id),
-      //     product_id: data.idProd,
-      //   };
-      //   console.log("ini order", order);
-      const response = await API.post("/order", order);
+      const order = {
+        seller_id: dataOrder[0]?.seller.id,
+        totalPrice: total,
+      };
+      const response = await API.post("/transaction", order);
+      if (response) {
+        Swal.fire({
+          position: "center",
+          icon: "Transaction Success",
+          title: "",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
       if (response) {
         console.log(response);
         alert("sukses");
@@ -248,7 +247,10 @@ function Checkout() {
             <p className="text-left text-lg font-semibold text-redOld">
               Rp.{total}
             </p>
-            <button className="mt-10 text-neutral-50 rounded-md bg-brownMain py-2 px-8">
+            <button
+              onClick={() => getTransaction.mutate()}
+              className="mt-10 text-neutral-50 rounded-md bg-brownMain py-2 px-8"
+            >
               Order
             </button>
           </div>

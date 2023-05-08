@@ -55,13 +55,15 @@ function DetailMenu() {
         <div className="flex justify-evenly p-10 flex-wrap overflow-auto h-[80vh] px-10 ">
           {!isLoading &&
             getMenu?.map((data, index) => (
-              <CardMenu
-                key={index}
-                id={data.id}
-                image={data.image}
-                title={data.title}
-                price={data.price}
-              />
+              <div>
+                <CardMenu
+                  key={index}
+                  id={data.id}
+                  image={data.image}
+                  title={data.title}
+                  price={data.price}
+                />
+              </div>
             ))}
         </div>
       </div>

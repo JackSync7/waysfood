@@ -17,6 +17,8 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
+	"github.com/midtrans/midtrans-go"
+	"github.com/midtrans/midtrans-go/snap"
 
 	// "github.com/midtrans/midtrans-go"
 	// "github.com/midtrans/midtrans-go/snap"
@@ -116,30 +118,28 @@ func (h *handlerTransaction) CreateTransaction(c echo.Context) error {
 		h.ChartRepository.CreateCarts(cart)
 
 	}
-	// 1. Initiate Snap client
-	// var s = snap.Client{}
-	// s.New(os.Getenv("SERVER_KEY"), midtrans.Sandbox)
-	// Use to midtrans.Production if you want Production Environment (accept real transaction).
 
-	// 2. Initiate Snap request param
-	// req := &snap.Request{
-	// 	TransactionDetails: midtrans.TransactionDetails{
-	// 		OrderID:  strconv.Itoa(dataTransactions.ID),
-	// 		GrossAmt: int64(dataTransactions.TotalPrice),
-	// 	},
-	// 	CreditCard: &snap.CreditCardDetails{
-	// 		Secure: true,
-	// 	},
-	// 	CustomerDetail: &midtrans.CustomerDetails{
-	// 		FName: dataTransactions.Buyer.Fullname,
-	// 		Email: dataTransactions.Buyer.Email,
-	// 	},
-	// }
+	var s = snap.Client{}
+	s.New(os.Getenv("SERVER_KEY"), midtrans.Sandbox)
 
-	// // 3. Execute request create Snap transaction to Midtrans Snap API
-	// snapResp, _ := s.CreateTransaction(req)
+	req := &snap.Request{
+		TransactionDetails: midtrans.TransactionDetails{
+			OrderID:  strconv.Itoa(dataTransactions.ID),
+			GrossAmt: int64(dataTransactions.TotalPrice),
+		},
+		CreditCard: &snap.CreditCardDetails{
+			Secure: true,
+		},
+		CustomerDetail: &midtrans.CustomerDetails{
+			FName: dataTransactions.Buyer.Fullname,
+			Email: dataTransactions.Buyer.Email,
+		},
+	}
 
-	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: dataTransactions})
+	// 3. Execute request create Snap transaction to Midtrans Snap API
+	snapResp, _ := s.CreateTransaction(req)
+
+	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: snapResp})
 
 }
 

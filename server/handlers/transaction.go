@@ -80,8 +80,8 @@ func (h *handlerTransaction) CreateTransaction(c echo.Context) error {
 	Transactions := models.Transaction{
 		ID:         transactionId,
 		BuyerID:    int(buyerId),
-		SellerID:   1,
-		TotalPrice: 2000000,
+		SellerID:   request.SellerID,
+		TotalPrice: request.TotalPrice,
 		Status:     "pending",
 	}
 

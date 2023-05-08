@@ -35,6 +35,7 @@ function Home() {
             .map((data, index) => (
               <PartnerList
                 key={index}
+                id={data.id}
                 image={data.image}
                 fullname={data.fullname}
               />

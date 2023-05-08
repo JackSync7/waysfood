@@ -6,6 +6,8 @@ import Home from "./pages/Home";
 import PartnerDashboard from "./pages/partner/PartnerDashboard";
 import AddProduct from "./pages/partner/AddProduct";
 import Maps from "./pages/showMap";
+import DetailMenu from "./pages/customer/DetailMenu";
+import Checkout from "./pages/customer/Checkout";
 import {
   PrivateRouteLogin,
   PrivateRouteCustomer,
@@ -66,11 +68,21 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/edit-profile" element={<EditProfile />} />
-            <Route path="/partner-dashboard" element={<PartnerDashboard />} />
-            <Route path="/add-product" element={<AddProduct />} />
-            <Route path="/map" element={<Maps />} />
+            <Route element={<PrivateRouteLogin />}>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/edit-profile" element={<EditProfile />} />
+              <Route element={<PrivateRoutePartner />}>
+                <Route
+                  path="/partner-dashboard"
+                  element={<PartnerDashboard />}
+                />
+                <Route path="/add-product" element={<AddProduct />} />
+              </Route>
+              <Route element={<PrivateRouteCustomer />}>
+                <Route path="/detail-menu/:id" element={<DetailMenu />} />
+                <Route path="/checkout/:id" element={<Checkout />} />
+              </Route>
+            </Route>
           </Routes>
         </div>
       )}

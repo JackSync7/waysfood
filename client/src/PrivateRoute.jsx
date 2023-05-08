@@ -12,7 +12,7 @@ export function PrivateRouteLogin() {
 export function PrivateRouteCustomer() {
   const [state] = useContext(UserContext);
 
-  if (state.user.roles === "partner") {
+  if (state.user.role === "partner") {
     return <Navigate to="/" />;
   }
   return <Outlet />;
@@ -21,8 +21,8 @@ export function PrivateRouteCustomer() {
 export function PrivateRoutePartner() {
   const [state] = useContext(UserContext);
 
-  if (state.user.roles !== "partner") {
-    return <Navigate to="/partner-dashboard" />;
+  if (state.user.role !== "partner") {
+    return <Navigate to="/" />;
   }
   return <Outlet />;
 }

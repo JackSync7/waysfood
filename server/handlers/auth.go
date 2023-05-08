@@ -3,6 +3,8 @@ package handlers
 import (
 	authdto "dumbmerch/dto/auth"
 	dto "dumbmerch/dto/result"
+	usersdto "dumbmerch/dto/users"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -26,10 +28,22 @@ func HandlerAuth(AuthRepository repositories.AuthRepository) *handlerAuth {
 }
 
 func (h *handlerAuth) Register(c echo.Context) error {
-	request := new(authdto.CreateUser)
-	if err := c.Bind(request); err != nil {
-		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
+	dataFile := c.Get("dataFile").(string)
+	fmt.Println("this is data file", dataFile)
+
+	request := usersdto.CreateUserRequest{
+		Fullname: c.FormValue("fullname"),
+		Email:    c.FormValue("email"),
+		Password: c.FormValue("password"),
+		Gender:   c.FormValue("gender"),
+		Phone:    c.FormValue("phone"),
+		Location: c.FormValue("location"),
+		Role:     c.FormValue("role"),
+		Image:    dataFile,
 	}
+	// if err := c.Bind(request); err != nil {
+	// 	return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
+	// }
 
 	validation := validator.New()
 	err := validation.Struct(request)

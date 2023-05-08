@@ -1,7 +1,7 @@
 package usersdto
 
 type CreateUserRequest struct {
-	FullName string `json:"fullName" form:"fullname" gorm:"type: varchar(255)" validate:"required"`
+	Fullname string `json:"fullname" form:"fullname" gorm:"type: varchar(255)" validate:"required"`
 	Email    string `json:"email" form:"email" gorm:"type: varchar(255)" validate:"required"`
 	Phone    string `json:"phone" form:"phone" gorm:"type: varchar(255)" validate:"required"`
 	Location string `json:"location" form:"location" gorm:"type: varchar(255)" validate:"required"`
@@ -12,7 +12,7 @@ type CreateUserRequest struct {
 }
 
 type UpdateUserRequest struct {
-	FullName string `json:"fullName" form:"fullname" gorm:"type: varchar(255)"`
+	Fullname string `json:"fullname" form:"fullname" gorm:"type: varchar(255)"`
 	Image    string `json:"image" form:"image" gorm:"type: varchar(255)"`
 	Email    string `json:"email" form:"email" gorm:"type: varchar(255)"`
 	Phone    string `json:"phone" form:"phone" gorm:"type: varchar(255)"`

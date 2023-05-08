@@ -18,7 +18,7 @@ function AddProduct() {
     isLoading,
     refetch,
   } = useQuery("getProducts", async () => {
-    const response = await API.get("/products");
+    const response = await API.get(`product-partner/${state.user.id}`);
     return response.data.data;
   });
 

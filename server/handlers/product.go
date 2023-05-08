@@ -35,18 +35,9 @@ func (h *handlerProduct) FindProduct(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: Products})
 }
-func (h *handlerProduct) FindProductMovie(c echo.Context) error {
-	Products, err := h.ProductRepository.FindProductMovie()
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
-	}
-	for i, p := range Products {
-		Products[i].Image = path_file + p.Image
-	}
-	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: Products})
-}
-func (h *handlerProduct) FindProductSeries(c echo.Context) error {
-	Products, err := h.ProductRepository.FindProductSeries()
+func (h *handlerProduct) FindProductPartner(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	Products, err := h.ProductRepository.FindProductPartner(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
 	}

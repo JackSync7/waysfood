@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
 )
 
@@ -63,7 +64,7 @@ func (h *handler) CreateUser(c echo.Context) error {
 
 	// data form pattern submit to pattern entity db user
 	user := models.User{
-		Fullname: request.FullName,
+		Fullname: request.Fullname,
 		Email:    request.Email,
 		Password: request.Password,
 		Gender:   request.Gender,
@@ -87,8 +88,9 @@ func (h *handler) UpdateUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
 	}
 
-	id, _ := strconv.Atoi(c.Param("id"))
-	user, err := h.UserRepository.GetUser(id)
+	userLogin := c.Get("userLogin")
+	Id := userLogin.(jwt.MapClaims)["id"].(float64)
+	user, err := h.UserRepository.GetUser(int(Id))
 	password, err := bcrypt.HashingPassword(request.Password)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
@@ -98,8 +100,8 @@ func (h *handler) UpdateUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
 	}
 
-	if request.FullName != "" {
-		user.Fullname = request.FullName
+	if request.Fullname != "" {
+		user.Fullname = request.Fullname
 	}
 
 	if request.Email != "" {

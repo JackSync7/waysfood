@@ -8,4 +8,5 @@ type Order struct {
 	SellerID  int                  `json:"seller_id" `
 	Seller    UsersProfileResponse `json:"seller" `
 	ProductID int                  `json:"product_id" gorm:"type: int"`
+	Product   Product              `json:"product"`
 }

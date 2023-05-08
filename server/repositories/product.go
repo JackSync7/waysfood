@@ -8,8 +8,7 @@ import (
 
 type ProductRepository interface {
 	FindProduct() ([]models.Product, error)
-	FindProductMovie() ([]models.Product, error)
-	FindProductSeries() ([]models.Product, error)
+	FindProductPartner(ID int) ([]models.Product, error)
 	GetProduct(ID int) (models.Product, error)
 	CreateProduct(Product models.Product) (models.Product, error)
 	UpdateProduct(Product models.Product) (models.Product, error)
@@ -26,15 +25,10 @@ func (r *repository) FindProduct() ([]models.Product, error) {
 
 	return Products, err
 }
-func (r *repository) FindProductMovie() ([]models.Product, error) {
-	var Products []models.Product
-	err := r.db.Preload("Category").Find(&Products, "category_id = ?", 2).Error
 
-	return Products, err
-}
-func (r *repository) FindProductSeries() ([]models.Product, error) {
+func (r *repository) FindProductPartner(ID int) ([]models.Product, error) {
 	var Products []models.Product
-	err := r.db.Preload("Category").Find(&Products, "category_id = ?", 1).Error
+	err := r.db.Preload("User").Find(&Products, "user_id = ?", ID).Error
 
 	return Products, err
 }

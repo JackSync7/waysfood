@@ -1,5 +1,5 @@
 import React from "react";
-import JumbotronImg from "../assets/JumbotronImg.png";
+import JumbotronImges from "../assets/JumbotronImg.png";
 import UserMenu from "../pages/customer/UserMenu";
 
 function Jumbotron() {
@@ -9,7 +9,7 @@ function Jumbotron() {
         <div className="w-full h-1/3 bg-yellowMain">
           <img
             className="mx-auto w-4/6 p-6 "
-            src={JumbotronImg}
+            src={JumbotronImges}
             alt="Loading"
           />
         </div>
